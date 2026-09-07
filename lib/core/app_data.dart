@@ -36,4 +36,9 @@ class AppData {
       gain: '+10.35%',
     ),
   ];
+
+  static PortfolioItem portfolioById(String id) => portfolioItems.firstWhere(
+    (item) => item.id == id,
+    orElse: () => portfolioItems.first,
+  );
 }

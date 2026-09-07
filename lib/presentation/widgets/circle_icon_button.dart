@@ -8,6 +8,7 @@ class CircleIconButton extends StatelessWidget {
   final Color? iconColor;
   final double size;
   final double iconSize;
+  final bool flipX;
 
   const CircleIconButton({
     super.key,
@@ -16,6 +17,7 @@ class CircleIconButton extends StatelessWidget {
     this.iconColor,
     this.size = 50,
     this.iconSize = 24,
+    this.flipX = false,
   });
 
   @override
@@ -30,7 +32,10 @@ class CircleIconButton extends StatelessWidget {
           color: AppColors.surfaceColor,
           shape: .circle,
         ),
-        child: SvgPicture.asset(icon, width: iconSize, height: iconSize, colorFilter: .mode(iconColor ?? AppColors.textPrimaryColor, .srcIn),),
+        child: Transform.flip(
+          flipX: flipX,
+          child: SvgPicture.asset(icon, width: iconSize, height: iconSize, colorFilter: .mode(iconColor ?? AppColors.textPrimaryColor, .srcIn),),
+        ),
       ),
     );
   }

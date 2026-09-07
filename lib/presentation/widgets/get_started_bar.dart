@@ -9,12 +9,22 @@ class GetStartedBar extends StatefulWidget {
   final VoidCallback? onCompleted;
   final String label;
   final int arrowCount;
+  final double trackHeight;
+  final double thumbWidth;
+  final double thumbHeight;
+  final double arrowSize;
+  final Color trackColor;
 
   const GetStartedBar({
     super.key,
     this.onCompleted,
     this.label = StringConst.getStarted,
     this.arrowCount = 5,
+    this.trackHeight = 60,
+    this.thumbWidth = 111,
+    this.thumbHeight = 48,
+    this.arrowSize = 20,
+    this.trackColor = AppColors.surfaceElevatedColor,
   });
 
   @override
@@ -22,15 +32,12 @@ class GetStartedBar extends StatefulWidget {
 }
 
 class _GetStartedBarState extends State<GetStartedBar> {
-  static const _trackHeight = 60.0;
-  static const _thumbHeight = 48.0;
-  static const _thumbWidth = 111.0;
-  static const _padding = 6.0;
+  static const _padding = 4.0;
 
   double _dragOffset = 0;
   bool _completed = false;
 
-  double _maxOffset(double width) => (width - _thumbWidth - (_padding * 2)).clamp(0, double.infinity);
+  double _maxOffset(double width) => (width - widget.thumbWidth - (_padding * 2)).clamp(0, double.infinity);
 
   void _onDragUpdate(DragUpdateDetails details, double maxOffset) {
     if (_completed) return;
@@ -58,9 +65,9 @@ class _GetStartedBarState extends State<GetStartedBar> {
         final progress = maxOffset == 0 ? 0.0 : _dragOffset / maxOffset;
         return Container(
           width: double.infinity,
-          height: _trackHeight,
+          height: widget.trackHeight,
           decoration: BoxDecoration(
-            color: AppColors.surfaceElevatedColor,
+            color: widget.trackColor,
             borderRadius: .circular(100),
           ),
           child: Stack(
@@ -69,15 +76,15 @@ class _GetStartedBarState extends State<GetStartedBar> {
               Opacity(
                 opacity: (1 - progress).clamp(0.15, 1),
                 child: Padding(
-                  padding: const .only(right: 20.0),
+                  padding: .only(right: 12),
                   child: Row(
-                    spacing: 10,
+                    spacing: widget.arrowSize == 20 ? 10 : 4,
                     mainAxisAlignment: .end,
                     children: List.generate(
                       widget.arrowCount,
                       (index) => Opacity(
                         opacity: 1 - (index * 0.15),
-                        child: SvgPicture.asset(AppIcons.icArrowRight, width: 20, height: 20,),
+                        child: SvgPicture.asset(AppIcons.icArrowRight, width: widget.arrowSize, height: widget.arrowSize,),
                       ),
                     ),
                   ),
@@ -85,13 +92,13 @@ class _GetStartedBarState extends State<GetStartedBar> {
               ),
               Positioned(
                 left: _padding + _dragOffset,
-                top: (_trackHeight - _thumbHeight) / 2,
+                top: (widget.trackHeight - widget.thumbHeight) / 2,
                 child: GestureDetector(
                   onHorizontalDragUpdate: (details) => _onDragUpdate(details, maxOffset),
                   onHorizontalDragEnd: (_) => _onDragEnd(maxOffset),
                   child: Container(
-                    width: _thumbWidth,
-                    height: _thumbHeight,
+                    width: widget.thumbWidth,
+                    height: widget.thumbHeight,
                     alignment: .center,
                     decoration: BoxDecoration(
                       gradient: AppColors.accentGradient,
