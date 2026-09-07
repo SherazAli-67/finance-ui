@@ -1,3 +1,4 @@
+import 'package:finance_ui/app_router/app_router.dart';
 import 'package:finance_ui/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
@@ -11,13 +12,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: StringConst.appTitle,
       theme: ThemeData(
-
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        brightness: .light,
       ),
-      home: Scaffold(body: Center(child: Text("Finance mobile app"),),)
+      routerConfig: router,
+      builder: (ctx, child) => child!,
     );
   }
 }
