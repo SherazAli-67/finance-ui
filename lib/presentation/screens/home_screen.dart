@@ -12,8 +12,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _headerFade;
+  late final Animation<Offset> _headerSlide;
+  late final Animation<double> _balanceFade;
+  late final Animation<Offset> _balanceSlide;
+  late final Animation<double> _portfolioHeaderFade;
+  late final Animation<Offset> _portfolioHeaderSlide;
+  late final List<Animation<double>> _cardFades;
+  late final List<Animation<Offset>> _cardSlides;
+  late final Animation<double> _activityFade;
+  late final Animation<Offset> _activitySlide;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 850));
+    _headerFade = CurvedAnimation(parent: _controller, curve: const Interval(0, 0.2, curve: Curves.easeOut));
+    _headerSlide = Tween(begin: const Offset(0, -0.15), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: const Interval(0, 0.2, curve: Curves.easeOut)));
+    _balanceFade = CurvedAnimation(parent: _controller, curve: const Interval(0.15, 0.4, curve: Curves.easeOut));
+    _balanceSlide = Tween(begin: const Offset(0, 0.2), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: const Interval(0.15, 0.4, curve: Curves.easeOutCubic)));
+    _portfolioHeaderFade = CurvedAnimation(parent: _controller, curve: const Interval(0.35, 0.55, curve: Curves.easeOut));
+    _portfolioHeaderSlide = Tween(begin: const Offset(0, 0.15), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: const Interval(0.35, 0.55, curve: Curves.easeOutCubic)));
+    _cardFades = List.generate(AppData.portfolioItems.length, (index) {
+      final begin = (0.45 + index * 0.08).clamp(0.0, 0.7);
+      final end = (begin + 0.25).clamp(0.0, 0.95);
+      return CurvedAnimation(parent: _controller, curve: Interval(begin, end, curve: Curves.easeOut));
+    });
+    _cardSlides = List.generate(AppData.portfolioItems.length, (index) {
+      final begin = (0.45 + index * 0.08).clamp(0.0, 0.7);
+      final end = (begin + 0.25).clamp(0.0, 0.95);
+      return Tween(begin: const Offset(0.15, 0), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: Interval(begin, end, curve: Curves.easeOutCubic)));
+    });
+    _activityFade = CurvedAnimation(parent: _controller, curve: const Interval(0.65, 0.9, curve: Curves.easeOut));
+    _activitySlide = Tween(begin: const Offset(0, 0.2), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: const Interval(0.65, 0.9, curve: Curves.easeOutCubic)));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _controller.value = 1;
+        return;
+      }
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,34 +81,55 @@ class HomeScreen extends StatelessWidget {
             spacing: 35,
             crossAxisAlignment: .start,
             children: [
-              const _HomeHeader(),
-              BalanceCard(amount: AppData.balance,),
+              FadeTransition(
+                opacity: _headerFade,
+                child: SlideTransition(position: _headerSlide, child: const _HomeHeader(),),
+              ),
+              FadeTransition(
+                opacity: _balanceFade,
+                child: SlideTransition(position: _balanceSlide, child: BalanceCard(amount: AppData.balance,),),
+              ),
               Column(
                 spacing: 24,
                 crossAxisAlignment: .start,
                 children: [
-                  SectionHeader(title: StringConst.yourPortfolio,),
+                  FadeTransition(
+                    opacity: _portfolioHeaderFade,
+                    child: SlideTransition(position: _portfolioHeaderSlide, child: SectionHeader(title: StringConst.yourPortfolio,),),
+                  ),
                   SizedBox(
                     height: 355,
                     child: ListView.separated(
                       scrollDirection: .horizontal,
                       itemCount: AppData.portfolioItems.length,
                       separatorBuilder: (_, _) => const SizedBox(width: 30),
-                      itemBuilder: (context, index) => PortfolioCard(
-                        item: AppData.portfolioItems[index],
-                        onTap: () => context.push('${NamedRoutes.detail.routeName}/${AppData.portfolioItems[index].id}'),
+                      itemBuilder: (context, index) => FadeTransition(
+                        opacity: _cardFades[index],
+                        child: SlideTransition(
+                          position: _cardSlides[index],
+                          child: PortfolioCard(
+                            item: AppData.portfolioItems[index],
+                            onTap: () => context.push('${NamedRoutes.detail.routeName}/${AppData.portfolioItems[index].id}'),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-              Column(
-                spacing: 16,
-                crossAxisAlignment: .start,
-                children: [
-                  SectionHeader(title: StringConst.activity,),
-                  ...AppData.activityItems.map((item) => ActivityTile(item: item,)),
-                ],
+              FadeTransition(
+                opacity: _activityFade,
+                child: SlideTransition(
+                  position: _activitySlide,
+                  child: Column(
+                    spacing: 16,
+                    crossAxisAlignment: .start,
+                    children: [
+                      SectionHeader(title: StringConst.activity,),
+                      ...AppData.activityItems.map((item) => ActivityTile(item: item,)),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -90,9 +166,9 @@ class _HomeHeader extends StatelessWidget {
               alignment: .center,
               decoration: BoxDecoration(
                 shape: .circle,
-                color: AppColors.accentColor
+                color: AppColors.accentColor,
               ),
-              child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24),
+              child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24,),
             ),
           ],
         ),

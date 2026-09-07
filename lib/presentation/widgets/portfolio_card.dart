@@ -32,15 +32,18 @@ class PortfolioCard extends StatelessWidget {
               Positioned(
                 left: 24,
                 top: 30,
-                child: Container(
-                  width: 61,
-                  height: 61,
-                  alignment: .center,
-                  decoration: BoxDecoration(
-                    color: item.isLight ? AppColors.iconDarkColor : AppColors.whiteColor.withValues(alpha: 0.5),
-                    borderRadius: .circular(12),
+                child: Hero(
+                  tag: 'portfolio-icon-${item.id}',
+                  child: Container(
+                    width: 61,
+                    height: 61,
+                    alignment: .center,
+                    decoration: BoxDecoration(
+                      color: item.isLight ? AppColors.iconDarkColor : AppColors.whiteColor.withValues(alpha: 0.5),
+                      borderRadius: .circular(12),
+                    ),
+                    child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24, colorFilter: .mode(item.isLight ? AppColors.whiteColor : AppColors.iconDarkColor, .srcIn),),
                   ),
-                  child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24, colorFilter: .mode(item.isLight ? AppColors.whiteColor : AppColors.iconDarkColor, .srcIn),),
                 ),
               ),
               Positioned(

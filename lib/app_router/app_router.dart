@@ -1,6 +1,7 @@
 import 'package:finance_ui/presentation/screens/detail_screen.dart';
 import 'package:finance_ui/presentation/screens/home_screen.dart';
 import 'package:finance_ui/presentation/screens/welcome_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter router = GoRouter(
@@ -10,7 +11,18 @@ GoRouter router = GoRouter(
     GoRoute(path: NamedRoutes.home.routeName, builder: (_, state) => const HomeScreen(),),
     GoRoute(
       path: '${NamedRoutes.detail.routeName}/:id',
-      builder: (_, state) => DetailScreen(id: state.pathParameters['id']!,),
+      pageBuilder: (_, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: DetailScreen(id: state.pathParameters['id']!,),
+        transitionDuration: const Duration(milliseconds: 280),
+        transitionsBuilder: (_, animation, _, child) => FadeTransition(
+          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+          child: SlideTransition(
+            position: Tween(begin: const Offset(0.05, 0), end: Offset.zero).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+            child: child,
+          ),
+        ),
+      ),
     ),
   ],
 );
