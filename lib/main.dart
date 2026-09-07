@@ -1,3 +1,4 @@
+import 'package:finance_ui/constants/string_const.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Finance App',
+      title: StringConst.appTitle,
       theme: ThemeData(
 
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
