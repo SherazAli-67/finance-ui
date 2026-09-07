@@ -90,9 +90,9 @@ class _HomeHeader extends StatelessWidget {
               alignment: .center,
               decoration: BoxDecoration(
                 shape: .circle,
-                gradient: AppColors.peachGradient,
+                color: AppColors.accentColor
               ),
-              child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24, colorFilter: .mode(AppColors.whiteColor, .srcIn),),
+              child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24),
             ),
           ],
         ),

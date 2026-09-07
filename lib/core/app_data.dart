@@ -3,7 +3,7 @@ import 'package:finance_ui/core/models/activity_item.dart';
 import 'package:finance_ui/core/models/portfolio_item.dart';
 
 class AppData {
-  static const userName = 'James';
+  static const userName = 'Sheraz';
   static const balance = '\$10.713.95';
   static const buyAvailable = '\$8.423';
   static const chartPrice = '\$ 123.22';

@@ -132,7 +132,7 @@ class _AssetHeader extends StatelessWidget {
             gradient: AppColors.accentGradient,
             borderRadius: .circular(14),
           ),
-          child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24, colorFilter: .mode(AppColors.whiteColor, .srcIn),),
+          child: SvgPicture.asset(AppIcons.icGallery, width: 24, height: 24,),
         ),
         Column(
           spacing: 4,
