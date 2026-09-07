@@ -25,6 +25,7 @@ class AppData {
       amount: '\$2.789.00',
       gain: '+07.899 (2.25%)',
       image: AppIcons.cardImg2,
+      isLight: true,
     ),
   ];
 

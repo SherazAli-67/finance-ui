@@ -5,6 +5,7 @@ class PortfolioItem {
   final String amount;
   final String gain;
   final String image;
+  final bool isLight;
 
   const PortfolioItem({
     required this.id,
@@ -13,5 +14,6 @@ class PortfolioItem {
     required this.amount,
     required this.gain,
     required this.image,
+    this.isLight = false,
   });
 }
