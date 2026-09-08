@@ -81,22 +81,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             spacing: 35,
             crossAxisAlignment: .start,
             children: [
-              FadeTransition(
-                opacity: _headerFade,
-                child: SlideTransition(position: _headerSlide, child: const _HomeHeader(),),
-              ),
-              FadeTransition(
-                opacity: _balanceFade,
-                child: SlideTransition(position: _balanceSlide, child: BalanceCard(amount: AppData.balance,),),
-              ),
+              //headerWidget
+              _buildHomeHeaderWidget(),
+              //balanceCard widget
+              _buildBalanceCardWidget(),
               Column(
                 spacing: 24,
                 crossAxisAlignment: .start,
                 children: [
-                  FadeTransition(
-                    opacity: _portfolioHeaderFade,
-                    child: SlideTransition(position: _portfolioHeaderSlide, child: SectionHeader(title: StringConst.yourPortfolio,),),
-                  ),
+                  //portfolio header txt
+                  _buildPortfolioHeaderTxtWidget(),
                   SizedBox(
                     height: 355,
                     child: ListView.separated(
@@ -105,37 +99,68 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       separatorBuilder: (_, _) => const SizedBox(width: 30),
                       itemBuilder: (context, index) => FadeTransition(
                         opacity: _cardFades[index],
-                        child: SlideTransition(
-                          position: _cardSlides[index],
-                          child: PortfolioCard(
-                            item: AppData.portfolioItems[index],
-                            onTap: () => context.push('${NamedRoutes.detail.routeName}/${AppData.portfolioItems[index].id}'),
-                          ),
-                        ),
+                        //portfolio card item widget
+                        child: _buildPortfolioCardItemWidget(index, context)
                       ),
                     ),
                   ),
                 ],
               ),
-              FadeTransition(
-                opacity: _activityFade,
-                child: SlideTransition(
-                  position: _activitySlide,
-                  child: Column(
-                    spacing: 16,
-                    crossAxisAlignment: .start,
-                    children: [
-                      SectionHeader(title: StringConst.activity,),
-                      ...AppData.activityItems.map((item) => ActivityTile(item: item,)),
-                    ],
-                  ),
-                ),
-              ),
+              //activity section
+              _buildActivitySectionWidget()
             ],
           ),
         ),
       ),
     );
+  }
+
+  SlideTransition _buildPortfolioCardItemWidget(int index, BuildContext context) {
+    return SlideTransition(
+        position: _cardSlides[index],
+        child: PortfolioCard(
+          item: AppData.portfolioItems[index],
+          onTap: () => context.push('${NamedRoutes.detail.routeName}/${AppData.portfolioItems[index].id}'),
+        )
+    );
+  }
+
+  FadeTransition _buildActivitySectionWidget() {
+    return FadeTransition(
+              opacity: _activityFade,
+              child: SlideTransition(
+                position: _activitySlide,
+                child: Column(
+                  spacing: 16,
+                  crossAxisAlignment: .start,
+                  children: [
+                    SectionHeader(title: StringConst.activity,),
+                    ...AppData.activityItems.map((item) => ActivityTile(item: item,)),
+                  ],
+                ),
+              ),
+            );
+  }
+
+  FadeTransition _buildPortfolioHeaderTxtWidget() {
+    return FadeTransition(
+                  opacity: _portfolioHeaderFade,
+                  child: SlideTransition(position: _portfolioHeaderSlide, child: SectionHeader(title: StringConst.yourPortfolio,),),
+                );
+  }
+
+  FadeTransition _buildBalanceCardWidget() {
+    return FadeTransition(
+              opacity: _balanceFade,
+              child: SlideTransition(position: _balanceSlide, child: BalanceCard(amount: AppData.balance,),),
+            );
+  }
+
+  FadeTransition _buildHomeHeaderWidget() {
+    return FadeTransition(
+              opacity: _headerFade,
+              child: SlideTransition(position: _headerSlide, child: const _HomeHeader(),),
+            );
   }
 }
 

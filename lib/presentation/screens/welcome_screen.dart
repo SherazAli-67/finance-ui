@@ -68,22 +68,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
           padding: .all(24),
           child: Column(
             children: [
-              FadeTransition(
-                opacity: _progressFade,
-                child: SlideTransition(
-                  position: _progressSlide,
-                  child: _WelcomeProgress(fill: _progressFill,),
-                ),
-              ),
-              Expanded(
-                child: FadeTransition(
-                  opacity: _heroFade,
-                  child: ScaleTransition(
-                    scale: _heroScale,
-                    child: SizedBox.expand(child: Image.asset(AppIcons.welcomeHeaderImg, fit: .cover,),),
-                  ),
-                ),
-              ),
+              //welcome progress widget
+              _buildWelcomeProgressWidget(),
+              _buildWelcomeHeaderImg(),
+              //welcome header widget
               Column(
                 spacing: 32,
                 crossAxisAlignment: .start,
@@ -92,41 +80,83 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     spacing: 12,
                     crossAxisAlignment: .start,
                     children: [
-                      FadeTransition(
-                        opacity: _titleFade,
-                        child: SlideTransition(
-                          position: _titleSlide,
-                          child: Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(text: StringConst.welcomeTitlePrefix, style: AppTextStyles.hero,),
-                                TextSpan(text: StringConst.welcomeTitleHighlight, style: AppTextStyles.heroBold,),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      FadeTransition(
-                        opacity: _subtitleFade,
-                        child: SlideTransition(
-                          position: _subtitleSlide,
-                          child: Text(StringConst.welcomeSubtitle, style: AppTextStyles.body,),
-                        ),
-                      ),
+                      //title widget
+                      _buildTitleWidget(),
+
+                      //subtitle widget
+                      _buildSubtitleWidget()
                     ],
                   ),
-                  FadeTransition(
-                    opacity: _ctaFade,
-                    child: SlideTransition(
-                      position: _ctaSlide,
-                      child: GetStartedBar(onCompleted: () => context.go(NamedRoutes.home.routeName),),
-                    ),
-                  ),
+                  //getStartedWidget
+                  _buildGetStartWidget(context)
                 ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  FadeTransition _buildGetStartWidget(BuildContext context) {
+    return FadeTransition(
+      opacity: _ctaFade,
+      child: SlideTransition(
+        position: _ctaSlide,
+        child: GetStartedBar(
+          onCompleted: () => context.go(NamedRoutes.home.routeName),),
+      ),
+    );
+  }
+
+  FadeTransition _buildSubtitleWidget() {
+    return FadeTransition(
+      opacity: _subtitleFade,
+      child: SlideTransition(
+        position: _subtitleSlide,
+        child: Text(StringConst.welcomeSubtitle, style: AppTextStyles.body,),
+      ),
+    );
+  }
+
+  FadeTransition _buildTitleWidget() {
+    return FadeTransition(
+      opacity: _titleFade,
+      child: SlideTransition(
+        position: _titleSlide,
+        child: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(text: StringConst.welcomeTitlePrefix,
+                style: AppTextStyles.hero,),
+              TextSpan(text: StringConst.welcomeTitleHighlight,
+                style: AppTextStyles.heroBold,),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded _buildWelcomeHeaderImg() {
+    return Expanded(
+      child: FadeTransition(
+        opacity: _heroFade,
+        child: ScaleTransition(
+          scale: _heroScale,
+          child: SizedBox.expand(
+            child: Image.asset(AppIcons.welcomeHeaderImg, fit: .cover,),),
+        ),
+      ),
+    );
+  }
+
+  FadeTransition _buildWelcomeProgressWidget() {
+    return FadeTransition(
+      opacity: _progressFade,
+      child: SlideTransition(
+        position: _progressSlide,
+        child: _WelcomeProgress(fill: _progressFill,),
       ),
     );
   }
